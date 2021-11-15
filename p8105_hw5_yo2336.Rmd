@@ -8,7 +8,7 @@ output: github_document
 library(tidyverse)
 ```
 
-# Problem 1
+# Problem 1 done during OH
 
 Load and clean data
 ```{r}
@@ -76,7 +76,7 @@ homicide_df %>%
 
 
 ```{r}
-resultes_df =
+results_df =
   homicide_df %>%
   nest(data = uid:resolution) %>%
   mutate(
@@ -84,8 +84,40 @@ resultes_df =
     tidy_results = map(test_results, broom::tidy)
   ) %>%
   select(city_state, tidy_results) %>%
-  unnest(tidy_results)
+  unnest(tidy_results) %>%
+  select(city_state, estimate, starts_with("conf"))
   
+```
 
+Plot
+
+```{r}
+results_df %>%
+  mutate(city_state = fct_reorder(city_state, estimate)) %>%
+  ggplot(aes(x = city_state, y = estimate)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
+
+
+# Problem 2
+
+```{r}
+tibble(
+  files = list.files("./data/long_study/"))
+```
+
+
+
+# Problem 3
+
+```{r}
+set.seed(10)
+
+iris_with_missing = iris %>% 
+  map_df(~replace(.x, sample(1:150, 20), NA)) %>%
+  mutate(Species = as.character(Species))
 ```
 
