@@ -7,9 +7,18 @@ output: github_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(readxl)
+
+
+theme_set(theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
 
-# Problem 1 done during OH
+# Problem 1 done during Office Hour
 
 Load and clean data
 ```{r}
@@ -105,7 +114,7 @@ results_df %>%
 
 # Problem 2
 
-Iterate loading data
+Iterate loading data and make data frame
 ```{r}
 csv_file = 
   tibble(
@@ -142,6 +151,8 @@ ggplot(aes(x = week, y = observation, color = subject_id)) +
   geom_line() +
   labs(title = "Distribution of Observations Over Time for Each Subject")
 ```
+
+Control group generally has lower observation values as compared to the experimental group.
 
 
 # Problem 3
