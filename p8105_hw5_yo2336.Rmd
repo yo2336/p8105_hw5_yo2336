@@ -116,6 +116,8 @@ results_df %>%
 
 ## Iterate loading data and make data frame
 
+Created a data frame named `csv_file` with the csv file names. Then created another data frame named `file_data` with the data inside each csv files read by using `read_csv` within `map()` to iterate for all files. To combine the read data and create a data frame, use `bind_cols()`. In order to match the file names and the data included, use `bind_cols()` again and bind the 2 data frames created, `csv_file` with names and `file_data` with corresponding data. Tidying this newly created data frame called `study_data` involved reorganizing the `week` variables using `pivot_longer()` to assign time variable `week` and all the respective observation values to new variable `observation`. Then created another variable `arm` for control vs experimental and renamed the `files` from original `csv_file` to `subject_id` with all participants' unique subject id including arm and number assigned. As a result, the new `study_df` has 4 variables with variable names `subject_id`, `arm`, `week`, `observation` and total of 160 observations.
+
 ```{r}
 csv_file = 
   tibble(
@@ -146,7 +148,7 @@ study_df =
 
 ## Plot
 
-Created a spaghetti plot using `ggplot()` + `geom_point()` + `geom_line()` combination. Assigned `week` variable as x-axis to observe data over time and `observation` as y-axis. Color coded unique `subject_id` and with the viridis color theme, control groups have darker color while experimental groups have lighter color.
+Created a spaghetti plot using `ggplot()` + `geom_point()` + `geom_line()` combination. Assigned `week` variable as x-axis to observe data over time and `observation` as y-axis. Color coded unique `subject_id` and with the viridis color theme, control groups are generally displayed in darker color scheme while experimental groups have lighter color.
 
 ```{r}
 study_df %>%
@@ -162,6 +164,9 @@ Control groups generally have lower observation values as compared to the experi
 # Problem 3
 
 ## Load data
+
+As provided.
+
 ```{r}
 set.seed(10)
 
