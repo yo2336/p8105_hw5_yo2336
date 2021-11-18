@@ -6,6 +6,7 @@ output: github_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(readxl)
 ```
 
 # Problem 1 done during OH
@@ -104,20 +105,85 @@ results_df %>%
 
 # Problem 2
 
+Iterate loading data
 ```{r}
-tibble(
+csv_file = 
+  tibble(
   files = list.files("./data/long_study/"))
+
+file_data =
+  csv_file %>%
+  map(~ read_csv(file.path("./data/long_study/", .))) %>%
+  bind_cols()
+
+study_df = 
+  bind_cols(csv_file, file_data) %>%
+  pivot_longer(
+    week_1:week_8,
+    names_to = "week",
+    values_to = "observation"
+  ) %>%
+   rename(subject_id = files) %>%
+   mutate(subject_id = str_replace(subject_id, ".csv", ""),
+          arm = case_when(str_detect(subject_id, "^con") ~ "control",
+                          str_detect(subject_id, "^exp") ~ "experimental"),
+          week = str_replace(week, "week_", ""),
+          week = as.numeric(week)) %>%
+   relocate(subject_id, arm)
+
 ```
 
+
+Plot
+```{r}
+study_df %>%
+ggplot(aes(x = week, y = observation, color = subject_id)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Distribution of Observations Over Time for Each Subject")
+```
 
 
 # Problem 3
 
+Load data
 ```{r}
 set.seed(10)
 
 iris_with_missing = iris %>% 
   map_df(~replace(.x, sample(1:150, 20), NA)) %>%
   mutate(Species = as.character(Species))
+```
+
+
+Function to replace NA
+
+```{r}
+fill_in_missing = function(vector) {
+ 
+  
+   if (is.numeric(vector)) {
+     new_vector = replace_na(vector, mean(vector, na.rm = TRUE))
+  }
+  
+  
+   if (is.character(vector)) {
+     new_vector = replace_na(vector, "virginica")
+  }
+  
+  return(new_vector)
+}
+```
+
+
+Final dataframe with NA's replaced and check
+```{r}
+iris_filled =
+  bind_cols(
+    map(iris_with_missing, fill_in_missing))
+
+
+summary(is.na(iris_with_missing))
+summary(is.na(iris_filled))
 ```
 
