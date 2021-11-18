@@ -20,7 +20,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 # Problem 1 done during Office Hour
 
-Load and clean data
+## Load and clean data
 ```{r}
 homicide_df = 
   read_csv("./data/homicide-data.csv", na = c("", "Unknown")) %>%
@@ -35,7 +35,7 @@ homicide_df =
 ```
 
 
-Baltimore
+## Baltimore
 
 ```{r}
 baltimore_df =
@@ -57,7 +57,7 @@ baltimore_test %>%
   broom::tidy()
 ```
 
-Across all Cities
+## Across all Cities
 
 ```{r}
 prop_test_function = function(city_df) {
@@ -99,7 +99,7 @@ results_df =
   
 ```
 
-Plot
+## Plot
 
 ```{r}
 results_df %>%
@@ -114,7 +114,8 @@ results_df %>%
 
 # Problem 2
 
-Iterate loading data and make data frame
+## Iterate loading data and make data frame
+
 ```{r}
 csv_file = 
   tibble(
@@ -143,7 +144,10 @@ study_df =
 ```
 
 
-Plot
+## Plot
+
+Created a spaghetti plot using `ggplot()` + `geom_point()` + `geom_line()` combination. Assigned `week` variable as x-axis to observe data over time and `observation` as y-axis. Color coded unique `subject_id` and with the viridis color theme, control groups have darker color while experimental groups have lighter color.
+
 ```{r}
 study_df %>%
 ggplot(aes(x = week, y = observation, color = subject_id)) +
@@ -152,12 +156,12 @@ ggplot(aes(x = week, y = observation, color = subject_id)) +
   labs(title = "Distribution of Observations Over Time for Each Subject")
 ```
 
-Control group generally has lower observation values as compared to the experimental group.
+Control groups generally have lower observation values as compared to the experimental group.
 
 
 # Problem 3
 
-Load data
+## Load data
 ```{r}
 set.seed(10)
 
@@ -167,7 +171,9 @@ iris_with_missing = iris %>%
 ```
 
 
-Function to replace NA
+## Function to replace NA
+
+Created a function called `fill_in_missing()`. With a vector input inside the function created, `if (is.numeric(vector))` will check if the vector input is in a numeric form and if true, replace any missing values with a mean of vector input excluding the missing value and create a replaced vector `new_vector`. Similarly, `if (is.character(vector))` will check if the vector input is in a character form and if true, replace any missing values with `virginica` and create a replaced vector `new_vector`. The function itself will return this `new_vector` as output.
 
 ```{r}
 fill_in_missing = function(vector) {
@@ -187,7 +193,10 @@ fill_in_missing = function(vector) {
 ```
 
 
-Final dataframe with NA's replaced and check
+## Final dataframe with NA's replaced and check
+
+Used `map()` to repeat the `fill_in_missing` function process throughout the entire data frame `iris_with_missing`. Used `bind_cols` to combine the the new vectors from function to create a new data frame and named it `iris_filled`. In order to check that the function successfully replaced the missing values, used `summary(is.na())` for both data frames before and after iteration process to ask for the existence of NA's. As a result, while `iris_with_missing` had 20 missing values for each 5 variables (categorized as TRUE), the new `iris_filled` does not have any NA (all 150 observations from each variables categorized as FALSE).
+
 ```{r}
 iris_filled =
   bind_cols(
